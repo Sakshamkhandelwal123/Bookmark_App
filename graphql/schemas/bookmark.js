@@ -1,4 +1,4 @@
-const {gql} = require("graphql-modules");
+const { gql } = require("graphql-modules");
 
 const typedefs = gql`
   type Bookmark {
@@ -18,6 +18,6 @@ const typedefs = gql`
     updateBookmark(id: Int!, title: String!, tag: String!): Bookmark!
     deleteBookmark(id: Int!): Bookmark!
   }
-`
+`;
 
 module.exports = typedefs;

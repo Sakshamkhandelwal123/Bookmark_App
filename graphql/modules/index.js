@@ -1,4 +1,4 @@
-const {createModule} = require("graphql-modules");
+const { createModule } = require("graphql-modules");
 
 const typedefs = require("../schemas/bookmark");
 const resolver = require("../resolvers/bookmark");

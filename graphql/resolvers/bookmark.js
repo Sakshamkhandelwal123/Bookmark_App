@@ -14,7 +14,7 @@ const resolver = {
       return bookmarks;
     },
 
-    bookmark: (parent, {id}) => {
+    bookmark: (parent, { id }) => {
       const bookmarkDetails = BOOKMARK.findByPk(id);
 
       if (!bookmarkDetails) {
@@ -22,7 +22,7 @@ const resolver = {
       }
 
       return bookmarkDetails;
-    }
+    },
   },
 
   Mutation: {
@@ -47,12 +47,12 @@ const resolver = {
           throw new Error("Not Found");
         }
 
-        const {title, tag} = args;
+        const { title, tag } = args;
 
         bookmark.update({
           title: title || bookmark.title,
           url: bookmark.url,
-          tag: tag || bookmark.tag
+          tag: tag || bookmark.tag,
         });
 
         return bookmark;
@@ -77,8 +77,8 @@ const resolver = {
       } catch (error) {
         throw new Error(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 
 module.exports = resolver;
