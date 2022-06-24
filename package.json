@@ -18,7 +18,8 @@
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "redis": "^4.1.0",
-    "sequelize": "^6.21.0"
+    "sequelize": "^6.21.0",
+    "winston": "^3.8.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.4.1"

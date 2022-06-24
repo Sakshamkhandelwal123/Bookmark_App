@@ -1,15 +1,29 @@
 const BOOKMARK = require("../../src/models").Bookmark;
+const logger = require("../../utils/logger");
+const client = require("../../utils/redis_connect");
 
 const resolver = {
   Query: {
-    bookmarks: () => {
-      const bookmarks = BOOKMARK.findAll({
+    bookmarks: async () => {
+      const bookmarks = await BOOKMARK.findAll({
         order: [["id"]],
       });
 
       if (!bookmarks) {
         throw new Error("Error");
       }
+
+      const reply = await client.get("bookmark");
+
+      if (reply) {
+        logger.info("using cached data");
+        logger.info(JSON.stringify(reply));
+        return (JSON.parse(reply));
+      }
+
+      const saveResult = await client.setEx("bookmark", 10, JSON.stringify(bookmarks));
+
+      logger.info(`new data cached ${saveResult}`);
 
       return bookmarks;
     },
