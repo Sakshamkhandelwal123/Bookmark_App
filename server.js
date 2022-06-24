@@ -1,14 +1,7 @@
-const { createModule, gql, createApplication } = require("graphql-modules");
+const { createApplication } = require("graphql-modules");
 const { ApolloServer } = require("apollo-server");
-const typedefs = require("./modules/index").typedefs;
-const resolver = require("./modules/index").resolver;
 
-const myModule = createModule({
-  id: "my-module",
-  dirname: __dirname,
-  typeDefs: typedefs,
-  resolvers: resolver,
-});
+const myModule = require("./graphql/modules/index");
 
 // This is your application, it contains your GraphQL schema and the implementation of it.
 const application = createApplication({

@@ -1,25 +1,4 @@
-const {gql} = require("graphql-modules");
-const BOOKMARK = require("../src/models").Bookmark;
-
-const typedefs = gql`
-  type Bookmark {
-    id: Int!
-    title: String!
-    url: String!
-    tag: String!
-    createdAt: String
-    updatedAt: String
-  }
-  type Query {
-    bookmarks: [Bookmark!]!
-    bookmark(id: Int!): Bookmark!
-  }
-  type Mutation {
-    addBookmark(title: String!, url: String!, tag: String!): Bookmark!
-    updateBookmark(id: Int!, title: String!, tag: String!): Bookmark!
-    deleteBookmark(id: Int!): Bookmark!
-  }
-`
+const BOOKMARK = require("../../src/models").Bookmark;
 
 const resolver = {
   Query: {
@@ -102,7 +81,4 @@ const resolver = {
   }
 }
 
-module.exports = {
-  typedefs,
-  resolver
-}
+module.exports = resolver;
