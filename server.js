@@ -1,9 +1,10 @@
 const { createApplication } = require("graphql-modules");
 const { ApolloServer } = require("apollo-server");
 
-const myModule = require("./graphql/modules/index");
+const logger = require("./utils/logger");
 
-// This is your application, it contains your GraphQL schema and the implementation of it.
+const myModule = require("./src/graphql/modules/index");
+
 const application = createApplication({
   modules: [myModule],
 });
@@ -17,5 +18,5 @@ const server = new ApolloServer({
 });
 
 server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+  logger.info(`🚀 Server ready at ${url}`);
 });

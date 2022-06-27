@@ -1,6 +1,9 @@
-const BOOKMARK = require("../../src/models").Bookmark;
-const logger = require("../../utils/logger");
-const client = require("../../utils/redis_connect");
+const BOOKMARK = require("../../models").Bookmark;
+const logger = require("../../../utils/logger");
+const client = require("../../../utils/redis_connect");
+const sendUserMail = require("../../../utils/queue");
+
+require("dotenv").config();
 
 const resolver = {
   Query: {
@@ -18,10 +21,14 @@ const resolver = {
       if (reply) {
         logger.info("using cached data");
         logger.info(JSON.stringify(reply));
-        return (JSON.parse(reply));
+        return JSON.parse(reply);
       }
 
-      const saveResult = await client.setEx("bookmark", 10, JSON.stringify(bookmarks));
+      const saveResult = await client.setEx(
+        "bookmark",
+        10,
+        JSON.stringify(bookmarks)
+      );
 
       logger.info(`new data cached ${saveResult}`);
 
@@ -47,6 +54,8 @@ const resolver = {
       if (!newBookmarks) {
         throw new Error("Error");
       }
+
+      sendUserMail(process.env.RECEIVER_EMAIL_DEFAULT);
 
       return newBookmarks;
     },
