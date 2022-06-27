@@ -2,8 +2,8 @@ const { createApplication } = require("graphql-modules");
 const { ApolloServer } = require("apollo-server");
 
 const logger = require("./utils/logger");
-
 const myModule = require("./src/graphql/modules/index");
+const context = require("./src/graphql/context");
 
 const application = createApplication({
   modules: [myModule],
@@ -14,6 +14,7 @@ const schema = application.schema;
 
 const server = new ApolloServer({
   schema,
+  context,
   executor,
 });
 

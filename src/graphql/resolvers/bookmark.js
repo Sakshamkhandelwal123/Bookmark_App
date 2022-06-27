@@ -1,9 +1,10 @@
+const { AuthenticationError } = require("apollo-server");
+require("dotenv").config();
+
 const BOOKMARK = require("../../models").Bookmark;
 const logger = require("../../../utils/logger");
 const client = require("../../../utils/redis_connect");
 const sendUserMail = require("../../../utils/queue");
-
-require("dotenv").config();
 
 const resolver = {
   Query: {
@@ -20,7 +21,9 @@ const resolver = {
 
       if (reply) {
         logger.info("using cached data");
+        
         logger.info(JSON.stringify(reply));
+
         return JSON.parse(reply);
       }
 
@@ -35,7 +38,11 @@ const resolver = {
       return bookmarks;
     },
 
-    bookmark: (parent, { id }) => {
+    bookmark: (parent, { id }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must login to add a Bookmark.");
+      }
+
       const bookmarkDetails = BOOKMARK.findByPk(id);
 
       if (!bookmarkDetails) {
@@ -47,7 +54,11 @@ const resolver = {
   },
 
   Mutation: {
-    addBookmark: (parent, args) => {
+    addBookmark: (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must login to add a Bookmark.");
+      }
+
       const bookmark = new BOOKMARK(args);
       const newBookmarks = bookmark.save();
 
@@ -60,7 +71,11 @@ const resolver = {
       return newBookmarks;
     },
 
-    updateBookmark: async (parent, args) => {
+    updateBookmark: async (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must login to add a Bookmark.");
+      }
+
       let bookmark;
 
       try {
@@ -84,7 +99,11 @@ const resolver = {
       }
     },
 
-    deleteBookmark: async (parent, args) => {
+    deleteBookmark: async (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must login to add a Bookmark.");
+      }
+
       let bookmark;
 
       try {

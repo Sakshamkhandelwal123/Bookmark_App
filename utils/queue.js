@@ -1,4 +1,5 @@
 const Queue = require("bull");
+
 const transporter = require("./sendMail").transporter;
 const logger = require("./logger");
 
@@ -11,7 +12,7 @@ async function sendUserMail(username) {
 
   const options = {
     delay: 60000, // 1 min in ms
-    attempts: 2,
+    attempts: 1,
   };
 
   sendMailQueue.add(data, options);
@@ -29,13 +30,12 @@ function sendMail(email) {
       subject: "Bookmark App",
       html: "<h1>Bookmark Added</h1>",
     };
-    
+
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
         logger.error(err);
         reject(err);
-      } 
-      else {
+      } else {
         logger.info(JSON.stringify(info, null, 3));
         resolve(info);
       }
