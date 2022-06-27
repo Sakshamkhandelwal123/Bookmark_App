@@ -21,7 +21,7 @@ const resolver = {
 
       if (reply) {
         logger.info("using cached data");
-        
+
         logger.info(JSON.stringify(reply));
 
         return JSON.parse(reply);
@@ -66,7 +66,7 @@ const resolver = {
         throw new Error("Error");
       }
 
-      sendUserMail(process.env.RECEIVER_EMAIL_DEFAULT);
+      sendUserMail(context.user.email);
 
       return newBookmarks;
     },

@@ -8,9 +8,9 @@ const { User } = require("../../models");
 module.exports = {
   Mutation: {
     async register(root, args, context) {
-      const { name, email, password } = args.input;
+      const { name, email, password, role } = args.input;
 
-      return User.create({ name, email, password });
+      return User.create({ name, email, password, role });
     },
 
     async login(root, { input }, context) {

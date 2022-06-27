@@ -6,6 +6,7 @@ const typedefs = gql`
     name: String!
     email: String!
     password: String!
+    role: String
     createdAt: String
     updatedAt: String
   }
@@ -19,17 +20,20 @@ const typedefs = gql`
     id: Int!
     name: String!
     email: String!
+    role: String
   }
 
   input RegisterInput {
     name: String!
     email: String!
     password: String!
+    role: String
   }
 
   input LoginInput {
     email: String!
     password: String!
+    role: String
   }
 
   type LoginResponse {
@@ -37,6 +41,7 @@ const typedefs = gql`
     name: String!
     email: String!
     token: String!
+    role: String
   }
 `;
 
