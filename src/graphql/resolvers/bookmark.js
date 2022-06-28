@@ -2,15 +2,60 @@ const { AuthenticationError } = require("apollo-server");
 require("dotenv").config();
 
 const BOOKMARK = require("../../models").Bookmark;
+const Folder = require("../../models").Folder;
+const SubFolder = require("../../models").SubFolder;
 const logger = require("../../../utils/logger");
 const client = require("../../../utils/redis_connect");
 const sendUserMail = require("../../../utils/queue");
 
 const resolver = {
+  Folder: {
+    SubFolders: ({ id }, args) =>
+      SubFolder.findAll({
+        where: {
+          Folder_ID: id,
+        },
+      }),
+
+    bookmarks: ({ id }, args) =>
+      BOOKMARK.findAll({
+        where: {
+          subfolder: id,
+        },
+      }),
+  },
+
+  SubFolder: {
+    bookmarks: ({ id }, args) =>
+      BOOKMARK.findAll({
+        where: {
+          subfolder: id,
+        },
+      }),
+  },
+
   Query: {
-    bookmarks: async () => {
+    allFolders: (parent, args) => Folder.findAll(),
+
+    getFolder: (parent, { name }) =>
+      Folder.findOne({
+        where: {
+          name,
+        },
+      }),
+
+    subfolders: (parent, { Folder_ID }) =>
+      SubFolder.findAll({
+        where: {
+          Folder_ID,
+        },
+      }),
+
+    bookmarks: async (parent, { subfolder }) => {
       const bookmarks = await BOOKMARK.findAll({
-        order: [["id"]],
+        where: {
+          subfolder,
+        },
       });
 
       if (!bookmarks) {
@@ -54,6 +99,12 @@ const resolver = {
   },
 
   Mutation: {
+    createFolder: (parent, args) => Folder.create(args),
+
+    deleteFolder: (parent, args) => Folder.destroy({ where: args }),
+
+    createSubFolder: (parent, args) => SubFolder.create(args),
+
     addBookmark: (parent, args, context) => {
       if (!context.user) {
         throw new AuthenticationError("You must login to add a Bookmark.");
